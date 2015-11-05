@@ -1,0 +1,21 @@
+{
+  "name": "spotify-remote",
+  "main": "./lib/spotify-remote",
+  "version": "0.0.0",
+  "description": "Use your keyboard to play, pause, go to previous and next track on Spotify without leaving your favorite editor",
+  "keywords": [
+    "Spotify",
+    "remote",
+    "music",
+    "play",
+    "productivity"
+  ],
+  "repository": "https://github.com/theHazzard/spotify-remote.git",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "child-process": "*"
+  }
+}
