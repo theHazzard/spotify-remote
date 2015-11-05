@@ -3,8 +3,6 @@ SpotifyRemoteView = require './spotify-remote-view'
 {exec} = require 'child_process'
 
 module.exports = SpotifyRemote =
-  spotifyRemoteView: null
-  modalPanel: null
   subscriptions: null
   rawSpotifyData: ''
   nowPlaying: {
@@ -17,8 +15,6 @@ module.exports = SpotifyRemote =
   }
 
   activate: (state) ->
-    @spotifyRemoteView = new SpotifyRemoteView(state.spotifyRemoteViewState)
-    #@modalPanel = atom.workspace.addModalPanel(item: @spotifyRemoteView.getElement(), visible: false)
     @notification = atom.notifications
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
