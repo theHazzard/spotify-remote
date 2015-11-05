@@ -1,7 +1,7 @@
 {
   "name": "spotify-remote",
   "main": "./lib/spotify-remote",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Use your keyboard to play, pause, go to previous and next track on Spotify without leaving your favorite editor",
   "keywords": [
     "Spotify",
