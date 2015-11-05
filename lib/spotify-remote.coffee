@@ -1,4 +1,3 @@
-SpotifyRemoteView = require './spotify-remote-view'
 {CompositeDisposable} = require 'atom'
 {exec} = require 'child_process'
 
