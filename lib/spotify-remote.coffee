@@ -35,11 +35,7 @@ module.exports = SpotifyRemote =
     spotifyRemoteViewState: @spotifyRemoteView.serialize()
 
   toggle: ->
-    exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlaybackStatus', (e, sout, serr) =>
-      if sout.trim() is 'Playing'
-        exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause'
-      else
-        exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause'
+    exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause', (e, sout, serr) =>
       #@spotifyRemoteView.setInfo this.nowPlaying.toString()
       this.buildData =>
         @notification.addSuccess this.nowPlaying.toString()
