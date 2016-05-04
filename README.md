@@ -1,5 +1,8 @@
 # Spotify Remote Atom package!
 
+#### Fork changes
+Added the current playing song to the status bar and     removed some dead code.
+
 ## the current version only supports Linux, Windows and IOS compatibility is in the oven~~
 
 Hi! this is a beta version of the Spotify Remote controller for Atom.io

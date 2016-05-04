@@ -24,15 +24,23 @@ module.exports = SpotifyRemote =
     @subscriptions.add atom.commands.add 'atom-workspace', 'spotify-remote:next': => @next()
     @subscriptions.add atom.commands.add 'atom-workspace', 'spotify-remote:previous': => @previous()
 
+    atom.packages.onDidActivateInitialPackages =>
+        @element = document.createElement 'div'
+        @element.id = 'status-bar-spotify'
+        @element.classList.add 'inline-block'
+        @statusBar = document.querySelector('status-bar')
+        @statusBar.addLeftTile(item: @element, priority: 100)
+        @element.innerHTML = "Spotify Now Playing"
+        this.statusElement = @element
+
+    setInterval @tick.bind(this), 2000
+
     #setInterval(this.buildData.bind(this), 2000)
 
   deactivate: ->
     @modalPanel.destroy()
     @subscriptions.dispose()
     @spotifyRemoteView.destroy()
-
-  serialize: ->
-    spotifyRemoteViewState: @spotifyRemoteView.serialize()
 
   toggle: ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause', (e, sout, serr) =>
@@ -70,3 +78,8 @@ module.exports = SpotifyRemote =
         this.nowPlaying.artist = /xesam:artist: (.+)/m.exec(this.rawSpotifyData)[1]
         this.nowPlaying.album = /xesam:album: (.+)/m.exec(this.rawSpotifyData)[1]
         cb()
+
+  tick: ->
+    #@spotifyRemoteView.setInfo this.nowPlaying.toString()
+    this.buildData =>
+        this.statusElement.innerHTML = this.nowPlaying.toString()
