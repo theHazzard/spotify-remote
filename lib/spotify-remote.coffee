@@ -15,7 +15,6 @@ module.exports = SpotifyRemote =
 
   activate: (state) ->
     @notification = atom.notifications
-
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -44,42 +43,42 @@ module.exports = SpotifyRemote =
 
   toggle: ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause', (e, sout, serr) =>
-      #@spotifyRemoteView.setInfo this.nowPlaying.toString()
-      this.buildData =>
-        @notification.addSuccess this.nowPlaying.toString()
+      if e
+        @notification.addWarning 'Spotify may not be running'
+      this.buildData()
 
   stop: ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlaybackStatus', (e, sout, serr) =>
       if sout.trim() is 'Playing'
         exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause'
-      #@spotifyRemoteView.setInfo this.nowPlaying.toString()
-      #this.buildData()
-      #@notification.addSuccess this.nowPlaying.toString()
 
   next: ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next', (e, sout) =>
-      #@spotifyRemoteView.setInfo this.nowPlaying.toString()
-      this.buildData =>
-        @notification.addSuccess this.nowPlaying.toString()
+      if e
+        @notification.addWarning 'Spotify may not be running'
+      this.buildData()
 
   previous: ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous', (e, sout) =>
-      #@spotifyRemoteView.setInfo this.nowPlaying.toString()
-      this.buildData =>
-        @notification.addSuccess this.nowPlaying.toString()
+      if e
+        @notification.addWarning 'Spotify may not be running'
+      this.buildData()
 
-  buildData: (cb) ->
+  buildData: () ->
     exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Metadata', (e, musicData) =>
       exec 'qdbus org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlaybackStatus', (e, playStatus) =>
         this.rawSpotifyData = musicData.trim()
-        this.nowPlaying.playing = if playStatus.trim() is 'Playing' then true else false
+        if this.rawSpotifyData
+          this.nowPlaying.playing = if playStatus.trim() is 'Playing' then true else false
 
-        this.nowPlaying.title = /xesam:title: (.+)/m.exec(this.rawSpotifyData)[1]
-        this.nowPlaying.artist = /xesam:artist: (.+)/m.exec(this.rawSpotifyData)[1]
-        this.nowPlaying.album = /xesam:album: (.+)/m.exec(this.rawSpotifyData)[1]
-        cb()
+          title = /xesam:title: (.+)/m.exec(this.rawSpotifyData)
+          artist = /xesam:artist: (.+)/m.exec(this.rawSpotifyData)
+          album = /xesam:album: (.+)/m.exec(this.rawSpotifyData)
+
+          this.nowPlaying.title = title && title[1] || ''
+          this.nowPlaying.artist = artist && artist[1] || ''
+          this.nowPlaying.album = album && album[1] || ''
 
   tick: ->
-    #@spotifyRemoteView.setInfo this.nowPlaying.toString()
-    this.buildData =>
-        this.statusElement.innerHTML = this.nowPlaying.toString()
+    this.buildData()
+    this.statusElement.innerHTML = this.nowPlaying.toString()
