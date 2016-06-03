@@ -81,4 +81,5 @@ module.exports = SpotifyRemote =
 
   tick: ->
     this.buildData()
-    this.statusElement.innerHTML = this.nowPlaying.toString()
+    if this.statusElement.innerHTML
+      this.statusElement.innerHTML = this.nowPlaying.toString()
